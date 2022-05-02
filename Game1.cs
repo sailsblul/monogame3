@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -20,6 +21,8 @@ namespace monogame3
         Texture2D orangeTexture;
         Rectangle orangeRect;
         Vector2 orangeSpeed;
+        SoundEffect cooSound;
+        SoundEffectInstance coo;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -58,6 +61,9 @@ namespace monogame3
             creamTexture = Content.Load<Texture2D>("tribbleCream");
             orangeTexture = Content.Load<Texture2D>("tribbleOrange");
             brownTexture = Content.Load<Texture2D>("tribbleBrown");
+            cooSound = Content.Load<SoundEffect>("tribble_coo");
+            coo = cooSound.CreateInstance();
+            coo.IsLooped = false;
             // TODO: use this.Content to load your game content here
         }
 
@@ -69,10 +75,17 @@ namespace monogame3
             // TODO: Add your update logic here
             greyRect.X += (int)greySpeed.X;
             if (greyRect.Right >= _graphics.PreferredBackBufferWidth || greyRect.Left <= 0)
+            {
                 greySpeed.X *= -1;
+                coo.Play();
+            }
+
             greyRect.Y += (int)greySpeed.Y;
             if (greyRect.Bottom > _graphics.PreferredBackBufferHeight || greyRect.Top <= 0)
+            {
                 greySpeed.Y *= -1;
+                coo.Play();
+            }
 
             creamRect.X += (int)creamSpeed.X;
             if (creamRect.Left >= _graphics.PreferredBackBufferWidth)
@@ -83,10 +96,17 @@ namespace monogame3
 
             brownRect.X += (int)brownSpeed.X;
             if (brownRect.Right >= _graphics.PreferredBackBufferWidth || brownRect.Left <= 0)
+            {
                 brownSpeed.X *= -1;
+                coo.Play();
+            }
+
             brownRect.Y += (int)brownSpeed.Y;
             if (brownRect.Bottom > _graphics.PreferredBackBufferHeight || brownRect.Top <= 0)
+            {
                 brownSpeed.Y *= -1;
+                coo.Play();
+            }
 
             if (orangeRect.Top > _graphics.PreferredBackBufferHeight || orangeRect.Bottom < 0 || orangeRect.Left > _graphics.PreferredBackBufferWidth || orangeRect.Right < 0)
             {
