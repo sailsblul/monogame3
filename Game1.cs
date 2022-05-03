@@ -179,7 +179,10 @@ namespace monogame3
                 orangeRect.Y += (int)orangeSpeed.Y;
 
                 if (playMusic.State == SoundState.Stopped)
+                {
                     screen = Screen.End;
+                    coo.Stop();
+                }
             }
             base.Update(gameTime);
         }
