@@ -11,11 +11,9 @@ namespace monogame3
     {
         float time;
         float timeStamp;
+        float cooldown = 0;
         Random gen = new Random();
-        Texture2D brownTexture;
-        Texture2D orangeTexture;
-        Texture2D creamTexture;
-        Texture2D greyTexture;
+        Texture2D[] colours = new Texture2D[4];
         List<Tribble> tribbles = new List<Tribble>();
         SoundEffect cooSound;
         SoundEffectInstance coo;
@@ -50,22 +48,22 @@ namespace monogame3
             this.Window.Title = "they've got the moves";
             screen = Screen.Intro;
             base.Initialize();
-            tribbles.Add(new Tribble(greyTexture, new Rectangle(300, 10, 100, 100), new Vector2(2, 2), 0));
-            tribbles.Add(new Tribble(brownTexture, new Rectangle(0, 430, 100, 100), new Vector2(2, 3), 0));
-            tribbles.Add(new Tribble(creamTexture, new Rectangle(0, 0, 50, 50), new Vector2(5, 5), 1));
-            tribbles.Add(new Tribble(orangeTexture, new Rectangle(350, 250, 100, 100), new Vector2(3, 4), 2));
-            tribbles.Add(new Tribble(brownTexture));
+            tribbles.Add(new Tribble(colours[0], new Rectangle(300, 10, 100, 100), new Vector2(2, 2), 0));
+            tribbles.Add(new Tribble(colours[1], new Rectangle(0, 430, 100, 100), new Vector2(2, 3), 0));
+            tribbles.Add(new Tribble(colours[2], new Rectangle(0, 0, 50, 50), new Vector2(5, 5), 1));
+            tribbles.Add(new Tribble(colours[3], new Rectangle(350, 250, 100, 100), new Vector2(3, 4), 2));
+            tribbles.Add(new Tribble(colours[1]));
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
           
-            greyTexture = Content.Load<Texture2D>("tribbleGrey");
-            creamTexture = Content.Load<Texture2D>("tribbleCream");
-            orangeTexture = Content.Load<Texture2D>("tribbleOrange");
-            brownTexture = Content.Load<Texture2D>("tribbleBrown");
-            
+            colours[0] = Content.Load<Texture2D>("tribbleGrey");
+            colours[2] = Content.Load<Texture2D>("tribbleCream");
+            colours[3] = Content.Load<Texture2D>("tribbleOrange");
+            colours[1] = Content.Load<Texture2D>("tribbleBrown");
+
             cooSound = Content.Load<SoundEffect>("tribble_coo");
             coo = cooSound.CreateInstance();
             coo.IsLooped = false;
@@ -100,7 +98,11 @@ namespace monogame3
                     if (tribble.HitWall)
                         coo.Play();
                 }
-
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && (float)gameTime.TotalGameTime.TotalSeconds - cooldown >= 0.5)
+                {
+                    tribbles.Add(new Tribble(colours[gen.Next(4)]));
+                    cooldown = (float)gameTime.TotalGameTime.TotalSeconds;
+                }
                 if (playMusic.State == SoundState.Stopped)
                 {
                     screen = Screen.End;
@@ -124,6 +126,7 @@ namespace monogame3
             else if (screen == Screen.TribbleYard)
             {
                 _spriteBatch.DrawString(textFont, (music.Duration.TotalSeconds - time).ToString("N0"), new Vector2(0, 0), Color.Green);
+                _spriteBatch.DrawString(textFont, "spacebar for more", new Vector2(0, 570), Color.Green);
                 foreach (Tribble tribble in tribbles)
                     _spriteBatch.Draw(tribble.Texture, tribble.Bounds, Color.White);
             }

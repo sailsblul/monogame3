@@ -33,7 +33,7 @@ namespace monogame3
         public Tribble(Texture2D texture)
         {
             _texture = texture;
-            _rectangle = new Rectangle(new Point(gen.Next(800), gen.Next(600)), new Point(gen.Next(40, 131)));
+            _rectangle = new Rectangle(new Point(gen.Next(670), gen.Next(470)), new Point(gen.Next(40, 131)));
             do
             {
                 _speed = new Vector2(gen.Next(-4, 5), gen.Next(-4, 5));
@@ -66,7 +66,7 @@ namespace monogame3
             _hitWall = false;
             if (_edgeBehaviour == 0)
             {
-                if (Bounds.Right >= width || Bounds.Left <= 0)
+                if (Bounds.Right > width || Bounds.Left <= 0)
                 {
                     _speed.X *= -1;
                     _hitWall = true;
